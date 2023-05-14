@@ -35,7 +35,7 @@ services:
     App\Auth\Repository\AccessTokenRepository:
         $accessTokenLifeTime: '%env(ACCESS_TOKEN_LIFETIME)%'
 
-    App\Auth\Repository\BannedPhoneRepository:
+    App\Auth\Repository\BannedEmailRepository:
         $phoneBanTime: '%env(BAN_PHONE_TIME)%'
 
     App\Auth\Repository\ConfirmationTokenRepository:

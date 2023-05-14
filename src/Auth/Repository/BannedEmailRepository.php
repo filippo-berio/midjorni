@@ -4,7 +4,7 @@ namespace App\Auth\Repository;
 
 use Predis\Client;
 
-class BannedPhoneRepository
+class BannedEmailRepository
 {
     private Client $redis;
 
@@ -15,7 +15,7 @@ class BannedPhoneRepository
         $this->redis = new Client($redisHost);
     }
 
-    public function banPhone(string $phone)
+    public function banEmail(string $phone)
     {
         $phone = str_replace('+', '', $phone);
         $this->redis->set('ban-phone:' . $phone, 1, 'EX', $this->phoneBanTime);

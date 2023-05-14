@@ -18,7 +18,7 @@ class ConfirmationTokenRepository
 
     public function save(ConfirmationToken $token): ConfirmationToken
     {
-        $phone = str_replace('+', '', $token->getPhone());
+        $phone = str_replace('+', '', $token->getEmail());
         $this->redis->set(
             'confirm-token:' . $phone,
             $token->getConfirmationCode() . ':' . $token->getRetries(),

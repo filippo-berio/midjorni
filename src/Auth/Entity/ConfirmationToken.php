@@ -5,9 +5,9 @@ namespace App\Auth\Entity;
 class ConfirmationToken
 {
     public function __construct(
-        private string $phone,
+        private string $email,
         private string $confirmationCode,
-        private int $retries,
+        private int    $retries,
     ) {
     }
 
@@ -27,9 +27,9 @@ class ConfirmationToken
         return $this->confirmationCode;
     }
 
-    public function getPhone(): string
+    public function getEmail(): string
     {
-        return $this->phone;
+        return $this->email;
     }
 
     public function getRetries(): int

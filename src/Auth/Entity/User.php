@@ -21,21 +21,21 @@ class User implements UserInterface, JsonSerializable
     private ?int $id = null;
 
     #[Column(unique: true)]
-    private string $phone;
+    private string $email;
 
     #[OneToOne(mappedBy: 'user', cascade: ['persist'])]
     private ?RefreshToken $refreshToken = null;
 
     private string $accessToken;
 
-    public function __construct(string $phone)
+    public function __construct(string $email)
     {
-        $this->phone = $phone;
+        $this->email = $email;
     }
 
-    public function getPhone(): string
+    public function getEmail(): string
     {
-        return $this->phone;
+        return $this->email;
     }
 
     public function getId(): ?int
@@ -62,7 +62,7 @@ class User implements UserInterface, JsonSerializable
     {
         return [
             'id' => $this->getId(),
-            'phone' => $this->getPhone(),
+            'email' => $this->getEmail(),
         ];
     }
 
@@ -77,6 +77,6 @@ class User implements UserInterface, JsonSerializable
 
     public function getUserIdentifier(): string
     {
-        return $this->phone;
+        return $this->email;
     }
 }

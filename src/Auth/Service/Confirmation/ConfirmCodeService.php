@@ -7,7 +7,7 @@ use App\Auth\Event\WrongConfirmationCodeEvent;
 use App\Auth\Exception\InvalidConfirmationCodeException;
 use App\Auth\Exception\PhoneBannedException;
 use App\Auth\Query\User\FindByPhone\FindUserByPhone;
-use App\Auth\Repository\BannedPhoneRepository;
+use App\Auth\Repository\BannedEmailRepository;
 use App\Auth\Repository\ConfirmationTokenRepository;
 use App\Auth\Service\User\LoginUserService;
 use App\Auth\Service\User\RegisterUserService;
@@ -17,27 +17,27 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class ConfirmCodeService
 {
     public function __construct(
-        private QueryBusInterface $queryBus,
-        private EventDispatcherInterface $eventDispatcher,
-        private RegisterUserService $registerUserService,
-        private LoginUserService $loginUserService,
+        private QueryBusInterface           $queryBus,
+        private EventDispatcherInterface    $eventDispatcher,
+        private RegisterUserService         $registerUserService,
+        private LoginUserService            $loginUserService,
         private ConfirmationTokenRepository $confirmationTokenRepository,
-        private BannedPhoneRepository $bannedPhoneRepository,
+        private BannedEmailRepository       $bannedPhoneRepository,
     ) {
     }
 
-    public function confirm(string $phone, string $code): CodeConfirmationResult
+    public function confirm(string $email, string $code): CodeConfirmationResult
     {
-        $retriesLeft = $this->validateCode($phone, $code);
+        $retriesLeft = $this->validateCode($email, $code);
         if ($retriesLeft !== null) {
             return CodeConfirmationResult::buildFailure($retriesLeft);
         }
 
-        $this->confirmationTokenRepository->delete($phone);
+        $this->confirmationTokenRepository->delete($email);
 
-        $user = $this->queryBus->query(new FindUserByPhone($phone));
+        $user = $this->queryBus->query(new FindUserByPhone($email));
         if (!$user) {
-            $user = $this->registerUserService->register($phone);
+            $user = $this->registerUserService->register($email);
         }
 
         $tokens = $this->loginUserService->login($user);

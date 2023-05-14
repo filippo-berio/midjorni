@@ -5,7 +5,7 @@ namespace App\Auth\Service\Confirmation;
 use App\Auth\Entity\ConfirmationToken;
 use App\Auth\Exception\ConfirmationTimeoutException;
 use App\Auth\Exception\PhoneBannedException;
-use App\Auth\Repository\BannedPhoneRepository;
+use App\Auth\Repository\BannedEmailRepository;
 use App\Auth\Repository\ConfirmationTimeoutRepository;
 use App\Auth\Repository\ConfirmationTokenRepository;
 use App\Lib\Sms\UseCase\SendSmsUseCase;
@@ -17,7 +17,7 @@ class SendConfirmationCodeService
     public function __construct(
         private SendSmsUseCase                $sendSmsUseCase,
         private ConfirmationTokenRepository   $confirmationTokenRepository,
-        private BannedPhoneRepository         $bannedPhoneRepository,
+        private BannedEmailRepository         $bannedPhoneRepository,
         private ConfirmationTimeoutRepository $confirmationTimeoutRepository,
     ) {
     }

@@ -12,8 +12,8 @@ class ConfirmCodeUseCase
     ) {
     }
 
-    public function confirm(string $phone, string $code): CodeConfirmationResult
+    public function confirm(string $email, string $code): CodeConfirmationResult
     {
-        return $this->confirmCodeService->confirm($phone, $code);
+        return $this->confirmCodeService->confirm($email, $code);
     }
 }
