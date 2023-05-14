@@ -13,6 +13,16 @@ services:
         bind:
             $redisHost: '%env(REDIS_HOST)%'
 
+
+    _instanceof:
+        App\Lib\CQRS\QueryHandlerInterface:
+            tags: ['cqrs.query_handler']
+        App\Lib\CQRS\CommandHandlerInterface:
+            tags: ['cqrs.command_handler']
+
+        App\Lib\Sms\Service\Provider\SmsProviderInterface:
+            tags: ['sms.provider']
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -33,6 +43,20 @@ services:
 
     App\Auth\Repository\ConfirmationTimeoutRepository:
         $timeout: '%env(CONFIRM_SMS_TIMEOUT)%'
+
+
+    App\Lib\CQRS\MessageHandler\AsyncCommandMessageHandler:
+        $commandHandlers: !tagged_iterator 'cqrs.command_handler'
+
+    App\Lib\CQRS\MessageHandler\CommandMessageHandler:
+        $commandHandlers: !tagged_iterator 'cqrs.command_handler'
+
+    App\Lib\CQRS\MessageHandler\QueryMessageHandler:
+        $queryHandlers: !tagged_iterator 'cqrs.query_handler'
+
+    App\Lib\Sms\Service\Provider\SmsProviderFactory:
+        $provider: '%env(SMS_PROVIDER)%'
+        $providers: !tagged_iterator 'sms.provider'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
