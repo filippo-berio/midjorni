@@ -1,0 +1,47 @@
+version: "3.7"
+
+services:
+    nginx:
+        image: nginx:alpine
+        volumes:
+            - ./:/app
+            - ./config/nginx.conf:/etc/nginx/conf.d/default.conf
+        container_name: midjorni-nginx
+        restart: always
+        depends_on:
+            - php
+        ports:
+            - "6040:80"
+
+    php:
+        build: &php-build
+            context: .
+        volumes: &volumes
+            - ./:/app/
+            - ./docker/php/aliases:/root/.bashrc
+            - ./docker/php/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+        container_name: midjorni-php
+        depends_on:
+            - postgres
+            - redis
+
+    postgres:
+        image: postgres:14.6-alpine
+        container_name: midjorni-postgres
+        environment:
+            POSTGRES_DB: ${PG_DB}
+            POSTGRES_PASSWORD: ${PG_PASS}
+            POSTGRES_USER: ${PG_USER}
+        volumes:
+          - postgres_data:/var/lib/postgresql/data:rw
+
+    redis:
+        image: redis:7.0.5-alpine
+        restart: always
+        volumes:
+            - redis_data:/data
+        container_name: midjorni-redis
+
+volumes:
+    postgres_data:
+    redis_data:
